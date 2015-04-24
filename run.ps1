@@ -8,25 +8,29 @@ do{
 	Write-Host "Start Length: "$startCount;
 	Write-Host "Total Length: "$totalCount;
 	$diff = $totalCount-$startCount;
+	Write-Host "*****************************************************************";
 	if($diff)
 	{
 		(Get-Content $args[0]) | Select-Object -last $diff > C:\temp.txt;
 		foreach ($str in $arrCompare)
 		{		  
-		  $lineNo = (Select-String C:\temp.txt -pattern "$str")."LineNumber";
+		  $lineNo = (Select-String C:\temp.txt -pattern $str)."LineNumber";
+		  
 		  if($lineNo.length)
 		  {
 			  foreach ($line in $lineNo)
 			  {
-				$line += $startCount;
-				Write-Host "Line Number: "$line;		  
+				$lineP = Get-Content C:\temp.txt | Select -Index ($line - 1);
+				$line += $startCount;					
+				Write-Host "Line Number: "$line" Line: "$lineP;
 			  }
 		  }  
 		}	
 		Remove-Item C:\temp.txt;
 		$startCount = $totalCount;
 	}
-	start-sleep -s 5;
+	Write-Host "*****************************************************************";
+	start-sleep -s $args[2];
 }while(1);
 
 
